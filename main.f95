@@ -28,3 +28,24 @@ program personal_quiz
     questions(1) = "What is Belkis's favorite subject?"
     questions(2) = "How long has Belkis been in KAUST?"
     questions(3) = "How good is this code?"
+
+    ! Answer options
+    options(1,1) = "Math"
+    options(1,2) = "Computer Science"
+    options(1,3) = "English"
+    options(1,4) = "INS"
+
+    options(2,1) = "3 years"
+    options(2,2) = "11 years"
+    options(2,3) = "7 years"
+    options(2,4) = " 10 years"
+
+    options(3,1) = " Not very good"
+    options(3,2) = " A bit boring"
+    options(3,3) = " Amazing"
+    options(3,4) = " Could be better"
+
+    ! Correct answers
+    correctAnswers(1) = 2
+    correctAnswers(2) = 2
+    correctAnswers(3) = 3
