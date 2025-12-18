@@ -1,6 +1,5 @@
 program personal_quiz
     implicit none
-    open(unit=10, file="quiz_result.txt", status="unknown")
     integer :: i !score that increases
     integer :: score !total score to than put into the file 
     integer :: userAnswer! the input for the questions
@@ -45,16 +44,16 @@ program personal_quiz
     options(2,4) = "4. 10 years"
  
   !question 3 answers  
-    options(3,1) = "She does not have any sisters"
-    options(3,2) = "She does not like any of her sisters"
-    options(3,3) = "She likes them all equally"
-    options(3,4) = "She likes the youngest sister only"
+    options(3,1) = "1.She does not have any sisters"
+    options(3,2) = "2.She does not like any of her sisters"
+    options(3,3) = "3.She likes them all equally"
+    options(3,4) = "4.She likes the youngest sister only"
   
     !questions 4 answers 
     options(4,1) = "1. Not very good"
     options(4,2) = "2. A bit boring"
     options(4,3) = "3.Could be better
-    options(4,4) = "4. Amazing"
+    options(4,4) = "4.Amazing"
 
     ! Correct answers
     correctAnswers(1) = 2
@@ -68,18 +67,42 @@ program personal_quiz
     print *, "" !i made space to make the code look better 
     print *, "Welcome to Belkis's quiz dear", (userName) , "Good luck, answer all the questions correctly using only numbers"
  
+    do i = 1, 4
+do i = 1, 4   ! loop through all 4 questions
 
-    do i = 1, 3
-!questions eing displayed
-    end do
+    ! Print the question
+    print *, questions(i)
+
+    ! Print the answer options
+    print *, options(i,1)
+    print *, options(i,2)
+    print *, options(i,3)
+    print *, options(i,4)
+
+    ! Ask the user for their answer
+    print *, "Enter your answer (1-4):"
+    read(*, *, iostat=ioStatus) userAnswer
+
+    ! Check if the answer is correct
+    if (userAnswer == correctAnswers(i)) then
+        print *, "Correct!"
+        score = score + 1   ! increase score by 1
+    else
+        print *, "Incorrect."
+    end if
+
+  end do
 
     print *, ""
     print *, "Final score:", score, "/ 3"
-  
-    write(10,*) "Name:", trim(userName)
-    write(10,*) "Final score:", score, "out of 3"
+  open(unit=10, file="quiz_result.txt", status="unknown")
+    print(10,*) "Name:", trim(userName)
+    write(10,*) "Final score:", score, "out of 4" !i used write since its the same as print but just in a differnt format 
     close(10)
-
+    !this makes me a file and add the information to a file everytime someone does the quiz
     print *, "Your result has been saved."
+
+
+
 
 end program personal_quiz
