@@ -13,12 +13,12 @@ program personal_quiz
     character(len=10), parameter :: GREEN = achar(27)//"[32m"
     character(len=10), parameter :: RED   = achar(27)//"[31m"
     character(len=10), parameter :: RESET = achar(27)//"[0m"
+!'''end of citation'''
 
    ! The arrays for the questions. I need to declasre these to have them ready for the user
     character(len=120) :: questions(4) ! 4 quetions in totals
     character(len=60)  :: options(4,4) ! a 2-d array because 3 questions and 4 answers for each 
     integer :: correctAnswers(4) ! 3 correct answers for each of the questions 
-!'''end of citation'''
 
     ! Questions in my quiz for each part of the array.
     questions(1) = "What is Belkis's favorite subject?"
@@ -26,7 +26,6 @@ program personal_quiz
     questions(3) = "Who is Belkis's favorite sister?"
     questions(4) = "How good is this code?"
 
-    
   !questions 1 answers 
     options(1,1) = "1. Math"
     options(1,2) = "2. Computer Science"
@@ -57,54 +56,64 @@ program personal_quiz
     correctAnswers(3) = 3
     correctAnswers(4) = 4
 
-     score = 0
     print *, "Enter your name:"
     read *, userName
 
-    print *, "" !i made space to make the code look better 
-    print *, "Welcome to Belkis's quiz dear", (userName) , "Good luck, answer all the questions correctly using only numbers"
- 
-    do i = 1, 4
-        print *, questions(i), RESET
-        ! Print options
-        print *, options(i,1)
-        print *, options(i,2)
-        print *, options(i,3)
-        print *, options(i,4)
+    print *, ""
+    print *, "Welcome to Belkis's quiz dear", (userName), &
+             "Good luck, answer all the questions correctly using only numbers"
 
-        ! Ask for answer
-        do
-            print *, "Enter your answer (1-4):"
-            !Modified/Taken from: <Author or GenAI tool name>
+    ! Initialize redo variable
+    redo = 1
+
+    do while (redo == 1)
+        score = 0  ! reset score for each new attempt
+
+        do i = 1, 4
+            print *, BLUE, questions(i), RESET
+            print *, options(i,1)
+            print *, options(i,2)
+            print *, options(i,3)
+            print *, options(i,4)
+
+        !Modified/Taken from: <Author or GenAI tool name>
 !Based on what i have can you add the part that helps my code not crash if the user inputs something other and show me how to make the color show up >
-!Date accessed/generated: <date>
+!Date accessed/generated: <18/12/2025>
 !Availability: <https://chatgpt.com/>
 !""
+            ! Input validation loop
             do
+                print *, "Enter your answer (1-4):"
                 read(*,*,iostat=ioStatus) userAnswer
                 if (ioStatus == 0 .and. userAnswer >= 1 .and. userAnswer <= 4) exit
                 print *, RED, "Invalid input! Enter a number between 1 and 4.", RESET
             end do
 
+            ! Check answer
             if (userAnswer == correctAnswers(i)) then
-!""
                 print *, GREEN, "Correct!", RESET
                 score = score + 1
             else
                 print *, RED, "Incorrect.", RESET
             end if
-        end do
 
-        print *, ""
+            print *, ""
+        end do  ! End of questions loop
+
+        ! Print and save final score
         print *, "Final score:", score, "/ 4"
 
-        open(unit=10, file="quiz_result.txt", status="unknown")
-        write(10,*) "Name:", (userName)
+        open(unit=10, file="quiz_result.txt", status="unknown", position="append")
+        write(10,*) "Name:", trim(userName)
         write(10,*) "Final score:", score, "out of 4"
+        write(10,*) "---------------------------"
         close(10)
 
         print *, "Your result has been saved."
-        print *, "Do you want to redo the quiz? Enter 1 for yes, 0 for no:"
+
+        ! Ask if user wants to redo
+        print *, "Do you want to redo quiz? Enter 1 for yes, 0 for no:"
         read *, redo
-    end do
+
+    end do 
 end program personal_quiz
