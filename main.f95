@@ -1,28 +1,24 @@
 program personal_quiz
     implicit none
-    integer :: i !score that increases
-    integer :: score !total score to than put into the file 
-    integer :: userAnswer! the input for the questions
-    character(len=30) :: userName   !the user name for than storing it into the file that i make 
-    integer::ioStatus !for code not to crash
-    redo=1
 !Modified/Taken from: <Author or GenAI tool name>
 !Based on what I have for now of my questions, I want you to only give me the part that changes the color of my question variables. I want green for the right answer, red for the wrong answer and a color of your choice for the questions>
 !Date accessed/generated: <date>
 !Availability: <https://chatgpt.com/>
-!""
- ! Color codes
-    character(len=*), parameter :: BLUE  = achar(27)//"[34m"
-    character(len=*), parameter :: GREEN = achar(27)//"[32m"
-    character(len=*), parameter :: RED   = achar(27)//"[31m"
-    character(len=*), parameter :: RESET = achar(27)//"[0m"
+       ! Variables
+    integer :: i, score, userAnswer, ioStatus, redo
+    character(len=30) :: userName
 
-!'''end of citation'''
-   
+    ! Color codes (fixed length)
+    character(len=10), parameter :: BLUE  = achar(27)//"[34m"
+    character(len=10), parameter :: GREEN = achar(27)//"[32m"
+    character(len=10), parameter :: RED   = achar(27)//"[31m"
+    character(len=10), parameter :: RESET = achar(27)//"[0m"
+
    ! The arrays for the questions. I need to declasre these to have them ready for the user
     character(len=120) :: questions(4) ! 4 quetions in totals
-    character(len=60)  :: options(3,4) ! a 2-d array because 3 questions and 4 answers for each 
-    integer :: correctAnswers(3) ! 3 correct answers for each of the questions 
+    character(len=60)  :: options(4,4) ! a 2-d array because 3 questions and 4 answers for each 
+    integer :: correctAnswers(4) ! 3 correct answers for each of the questions 
+!'''end of citation'''
 
     ! Questions in my quiz for each part of the array.
     questions(1) = "What is Belkis's favorite subject?"
@@ -52,7 +48,7 @@ program personal_quiz
     !questions 4 answers 
     options(4,1) = "1. Not very good"
     options(4,2) = "2. A bit boring"
-    options(4,3) = "3.Could be better
+    options(4,3) = "3.Could be better"
     options(4,4) = "4.Amazing"
 
     ! Correct answers
@@ -62,47 +58,53 @@ program personal_quiz
     correctAnswers(4) = 4
 
      score = 0
-    print *, "Enter your name:", read *, userName
+    print *, "Enter your name:"
+    read *, userName
 
     print *, "" !i made space to make the code look better 
     print *, "Welcome to Belkis's quiz dear", (userName) , "Good luck, answer all the questions correctly using only numbers"
  
     do i = 1, 4
-do i = 1, 4   ! loop through all 4 questions
+        print *, questions(i), RESET
+        ! Print options
+        print *, options(i,1)
+        print *, options(i,2)
+        print *, options(i,3)
+        print *, options(i,4)
 
-    ! Print the question
-    print *, questions(i)
+        ! Ask for answer
+        do
+            print *, "Enter your answer (1-4):"
+            !Modified/Taken from: <Author or GenAI tool name>
+!Based on what i have can you add the part that helps my code not crash if the user inputs something other and show me how to make the color show up >
+!Date accessed/generated: <date>
+!Availability: <https://chatgpt.com/>
+!""
+            do
+                read(*,*,iostat=ioStatus) userAnswer
+                if (ioStatus == 0 .and. userAnswer >= 1 .and. userAnswer <= 4) exit
+                print *, RED, "Invalid input! Enter a number between 1 and 4.", RESET
+            end do
 
-    ! Print the answer options
-    print *, options(i,1)
-    print *, options(i,2)
-    print *, options(i,3)
-    print *, options(i,4)
+            if (userAnswer == correctAnswers(i)) then
+!""
+                print *, GREEN, "Correct!", RESET
+                score = score + 1
+            else
+                print *, RED, "Incorrect.", RESET
+            end if
+        end do
 
-    ! Ask the user for their answer
-    print *, "Enter your answer (1-4):"
-    read(*, *, iostat=ioStatus) userAnswer
+        print *, ""
+        print *, "Final score:", score, "/ 4"
 
-    ! Check if the answer is correct
-    if (userAnswer == correctAnswers(i)) then
-        print *, "Correct!"
-        score = score + 1   ! increase score by 1
-    else
-        print *, "Incorrect."
-    end if
+        open(unit=10, file="quiz_result.txt", status="unknown")
+        write(10,*) "Name:", (userName)
+        write(10,*) "Final score:", score, "out of 4"
+        close(10)
 
-  end do
-
-    print *, ""
-    print *, "Final score:", score, "/ 3"
-  open(unit=10, file="quiz_result.txt", status="unknown")
-    print(10,*) "Name:", trim(userName)
-    write(10,*) "Final score:", score, "out of 4" !i used write since its the same as print but just in a differnt format 
-    close(10)
-    !this makes me a file and add the information to a file everytime someone does the quiz
-    print *, "Your result has been saved."
-
-
-
-
+        print *, "Your result has been saved."
+        print *, "Do you want to redo the quiz? Enter 1 for yes, 0 for no:"
+        read *, redo
+    end do
 end program personal_quiz
